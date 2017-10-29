@@ -2,7 +2,7 @@ use std::cmp::max;
 use std::io::{Read, stdin, stdout, Write};
 
 extern crate clap;
-use clap::{Arg, App};
+use clap::{App, Arg};
 
 const ESC: Option<u8> = Some(0x1b);
 const TERMINATOR: u8 = 'm' as u8;
