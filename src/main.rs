@@ -61,7 +61,7 @@ fn maximum(maximums: &mut Vec<usize>, l: &Vec<usize>) {
 fn read_stdin() -> String {
     let mut buffer = String::new();
     stdin().read_to_string(&mut buffer).expect(
-        "read stdin to buffer",
+        "Failed to read stdin to buffer",
     );
     buffer
 }
