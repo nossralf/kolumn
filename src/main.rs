@@ -1,5 +1,5 @@
 use std::cmp::max;
-use std::io::{Read, stdin};
+use std::io::{Read, stdin, stdout, Write};
 
 extern crate clap;
 use clap::{Arg, App};
@@ -86,6 +86,8 @@ fn main() {
     let stdin = read_stdin();
     let column_widths = deduce_column_widths(&stdin, splitter);
 
+    let stdout = stdout();
+    let mut out = stdout.lock();
     for line in stdin.lines() {
         let segments = line.split(splitter);
         let number_of_segments = segments.clone().count();
@@ -95,11 +97,12 @@ fn main() {
             let width = total_width + (column_widths[i] - visible_width) + 1;
 
             if i == number_of_segments - 1 {
-                print!("{}", s);
+                write!(out, "{}", s).expect("Failed to write to stdout");
             } else {
-                print!("{:width$}", s.trim_right(), width = width);
+                write!(out, "{:width$}", s.trim_right(), width = width)
+                    .expect("Failed to write to stdout");
             }
         }
-        println!("");
+        writeln!(out, "").expect("Failed to write to stdout");
     }
 }
