@@ -50,7 +50,7 @@ where
 {
 }
 
-fn maximum(maximums: &mut Vec<usize>, l: &Vec<usize>) {
+fn maximum(maximums: &mut Vec<usize>, l: &[usize]) {
     let size = max(maximums.len(), l.len());
     maximums.resize(size, 0);
     for i in 0..l.len() {
