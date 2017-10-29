@@ -66,7 +66,7 @@ fn read_stdin() -> String {
     buffer
 }
 
-fn deduce_column_widths(buffer: &String, splitter: &str) -> Vec<usize> {
+fn deduce_column_widths(buffer: &str, splitter: &str) -> Vec<usize> {
     let mut column_widths: Vec<usize> = vec![];
     for line in buffer.lines() {
         let segment_lengths: Vec<usize> = line.split(splitter)
