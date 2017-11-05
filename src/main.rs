@@ -18,7 +18,7 @@ fn maximum(maximums: &mut Vec<usize>, l: &[usize]) {
 fn read_stdin() -> String {
     let mut buffer = String::new();
     stdin().read_to_string(&mut buffer).expect(
-        "Failed to read stdin to buffer",
+        "Reading stdin to buffer",
     );
     buffer
 }
@@ -53,11 +53,11 @@ fn main() {
             let width = s.len() + (column_widths[i] - visible_width) + 1;
 
             if i == number_of_segments - 1 {
-                write!(out, "{}", s).expect("Failed to write to stdout");
+                write!(out, "{}", s).expect("Writing to stdout");
             } else {
-                write!(out, "{:width$}", s, width = width).expect("Failed to write to stdout");
+                write!(out, "{:width$}", s, width = width).expect("Writing to stdout");
             }
         }
-        writeln!(out, "").expect("Failed to write to stdout");
+        writeln!(out, "").expect("Writing to stdout");
     }
 }
