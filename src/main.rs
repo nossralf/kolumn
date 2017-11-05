@@ -50,8 +50,7 @@ fn main() {
         let number_of_segments = segments.clone().count();
         for (i, s) in segments.enumerate() {
             let visible_width = s.bytes().ansi_filter().count();
-            let total_width = s.len();
-            let width = total_width + (column_widths[i] - visible_width) + 1;
+            let width = s.len() + (column_widths[i] - visible_width) + 1;
 
             if i == number_of_segments - 1 {
                 write!(out, "{}", s).expect("Failed to write to stdout");
