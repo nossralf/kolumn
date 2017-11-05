@@ -49,15 +49,14 @@ fn main() {
         let segments = line.split(splitter);
         let number_of_segments = segments.clone().count();
         for (i, s) in segments.enumerate() {
-            let visible_width = s.trim_right().bytes().ansi_filter().count();
-            let total_width = s.trim_right().len();
+            let visible_width = s.bytes().ansi_filter().count();
+            let total_width = s.len();
             let width = total_width + (column_widths[i] - visible_width) + 1;
 
             if i == number_of_segments - 1 {
                 write!(out, "{}", s).expect("Failed to write to stdout");
             } else {
-                write!(out, "{:width$}", s.trim_right(), width = width)
-                    .expect("Failed to write to stdout");
+                write!(out, "{:width$}", s, width = width).expect("Failed to write to stdout");
             }
         }
         writeln!(out, "").expect("Failed to write to stdout");
