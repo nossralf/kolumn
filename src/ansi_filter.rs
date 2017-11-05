@@ -12,19 +12,20 @@ where
     type Item = I::Item;
 
     fn next(&mut self) -> Option<I::Item> {
-        let n = self.iter.next();
-        if n.is_none() {
-            return None;
-        }
-        if n == ESC {
-            while let Some(b) = self.iter.next() {
-                if b == TERMINATOR as u8 {
-                    break;
+        let mut n = self.iter.next();
+        loop {
+            if n.is_none() {
+                return None;
+            } else if n == ESC {
+                while let Some(b) = self.iter.next() {
+                    if b == TERMINATOR as u8 {
+                        break;
+                    }
                 }
+            } else {
+                return n;
             }
-            return self.iter.next();
-        } else {
-            return n;
+            n = self.iter.next();
         }
     }
 }
