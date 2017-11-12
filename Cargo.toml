@@ -4,5 +4,7 @@ version = "1.0.0"
 authors = ["Fredrik Larsson <nossralf@gmail.com>"]
 license = "MIT"
 
+[badges]
+travis-ci = { repository = "nossralf/kvicksilver" }
 [dependencies]
 clap = "^2"
