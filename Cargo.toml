@@ -6,5 +6,6 @@ license = "MIT"
 
 [badges]
 travis-ci = { repository = "nossralf/kvicksilver" }
+appveyor = { repository = "nossralf/kvicksilver" }
 [dependencies]
 clap = "^2"
