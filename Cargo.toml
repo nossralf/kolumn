@@ -2,6 +2,7 @@
 name = "kolumn"
 version = "1.0.0"
 authors = ["Fredrik Larsson <nossralf@gmail.com>"]
+license = "MIT"
 
 [dependencies]
 clap = "^2"
