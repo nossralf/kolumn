@@ -34,18 +34,8 @@ fn deduce_column_widths(buffer: &str, splitter: &str) -> Vec<usize> {
     column_widths
 }
 
-fn main() {
-    let matches = App::new("column")
-        .arg(Arg::with_name("split").short("s").takes_value(true))
-        .get_matches();
-
-    let splitter = matches.value_of("split").unwrap_or("-");
-    let stdin = read_stdin();
-    let column_widths = deduce_column_widths(&stdin, splitter);
-
-    let stdout = stdout();
-    let mut out = stdout.lock();
-    for line in stdin.lines() {
+fn write_output(buffer: &str, splitter: &str, column_widths: &[usize], out: &mut Write) {
+    for line in buffer.lines() {
         let segments = line.split(splitter);
         let number_of_segments = segments.clone().count();
         for (i, s) in segments.enumerate() {
@@ -60,4 +50,18 @@ fn main() {
         }
         writeln!(out, "").expect("Writing to stdout");
     }
+}
+
+fn main() {
+    let matches = App::new("column")
+        .arg(Arg::with_name("split").short("s").takes_value(true))
+        .get_matches();
+
+    let splitter = matches.value_of("split").unwrap_or("-");
+    let stdin = read_stdin();
+    let column_widths = deduce_column_widths(&stdin, splitter);
+
+    let stdout = stdout();
+    let mut out = stdout.lock();
+    write_output(&stdin, splitter, &column_widths, &mut out);
 }
