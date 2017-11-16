@@ -4,8 +4,8 @@ use std::io::{Read, stdin, stdout, Write};
 extern crate clap;
 use clap::{App, Arg};
 
-mod ansi_filter;
-use ansi_filter::AnsiFilter;
+mod csi_filter;
+use csi_filter::CsiFilterable;
 
 fn maximum(maximums: &mut Vec<usize>, l: &[usize]) {
     let size = max(maximums.len(), l.len());
@@ -27,7 +27,7 @@ fn deduce_column_widths(buffer: &str, splitter: &str) -> Vec<usize> {
     let mut column_widths: Vec<usize> = vec![];
     for line in buffer.lines() {
         let segment_lengths: Vec<usize> = line.split(splitter)
-            .map(|l| l.bytes().ansi_filter().count())
+            .map(|l| l.bytes().filter_csi().count())
             .collect();
         maximum(&mut column_widths, &segment_lengths);
     }
@@ -39,7 +39,7 @@ fn write_output(buffer: &str, splitter: &str, column_widths: &[usize], out: &mut
         let segments = line.split(splitter);
         let number_of_segments = segments.clone().count();
         for (i, s) in segments.enumerate() {
-            let visible_width = s.bytes().ansi_filter().count();
+            let visible_width = s.bytes().filter_csi().count();
             let width = s.len() + (column_widths[i] - visible_width) + 1;
 
             if i == number_of_segments - 1 {

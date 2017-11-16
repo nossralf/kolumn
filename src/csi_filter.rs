@@ -4,7 +4,7 @@ const ESC: Option<u8> = Some(0x1b);
 const CSI_START: Option<u8> = Some('[' as u8);
 const TERMINATOR: u8 = 'm' as u8;
 
-pub struct AnsiFilterInner<I>
+pub struct CsiFilter<I>
 where
     I: Iterator,
 {
@@ -12,7 +12,7 @@ where
     peeks: VecDeque<Option<I::Item>>,
 }
 
-impl<I> Iterator for AnsiFilterInner<I>
+impl<I> Iterator for CsiFilter<I>
 where
     I: Iterator<Item = u8>,
 {
@@ -64,19 +64,19 @@ where
     }
 }
 
-pub trait AnsiFilter: Iterator {
-    fn ansi_filter(self) -> AnsiFilterInner<Self>
+pub trait CsiFilterable: Iterator {
+    fn filter_csi(self) -> CsiFilter<Self>
     where
         Self: Sized,
     {
-        AnsiFilterInner {
+        CsiFilter {
             iter: self,
             peeks: VecDeque::new(),
         }
     }
 }
 
-impl<T: ?Sized> AnsiFilter for T
+impl<T: ?Sized> CsiFilterable for T
 where
     T: Iterator<Item = u8>,
 {
@@ -89,14 +89,14 @@ mod tests {
     #[test]
     fn no_ansi_escape() {
         let visible: Vec<u8> = "hello".bytes().collect();
-        let filtered: Vec<u8> = "hello".bytes().ansi_filter().collect();
+        let filtered: Vec<u8> = "hello".bytes().filter_csi().collect();
         assert_eq!(visible, filtered);
     }
 
     #[test]
     fn single_ansi_escape() {
         let visible: Vec<u8> = "hello".bytes().collect();
-        let filtered: Vec<u8> = "hel\x1b[32mlo".bytes().ansi_filter().collect();
+        let filtered: Vec<u8> = "hel\x1b[32mlo".bytes().filter_csi().collect();
         assert_eq!(visible, filtered);
     }
 
@@ -105,7 +105,7 @@ mod tests {
         let visible: Vec<u8> = "ab".bytes().collect();
         let filtered: Vec<u8> = "\x1b[32ma\x1b[m\x1b[31mb\x1b[m"
             .bytes()
-            .ansi_filter()
+            .filter_csi()
             .collect();
         assert_eq!(visible, filtered);
     }
@@ -113,14 +113,14 @@ mod tests {
     #[test]
     fn string_ends_in_the_middle_of_an_ansi_escape() {
         let visible: Vec<u8> = "ab".bytes().collect();
-        let filtered: Vec<u8> = "ab\x1b[3".bytes().ansi_filter().collect();
+        let filtered: Vec<u8> = "ab\x1b[3".bytes().filter_csi().collect();
         assert_eq!(visible, filtered);
     }
 
     #[test]
     fn string_contains_escape_but_not_a_valid_ansi_escape_sequence() {
         let visible: Vec<u8> = "ab\x1b(3".bytes().collect();
-        let filtered: Vec<u8> = "ab\x1b(3".bytes().ansi_filter().collect();
+        let filtered: Vec<u8> = "ab\x1b(3".bytes().filter_csi().collect();
         assert_eq!(visible, filtered);
     }
 }
