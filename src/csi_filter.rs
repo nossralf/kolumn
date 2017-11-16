@@ -2,7 +2,6 @@ use std::collections::VecDeque;
 
 const ESC: Option<u8> = Some(0x1b);
 const CSI_START: Option<u8> = Some('[' as u8);
-const TERMINATOR: u8 = 'm' as u8;
 
 pub struct CsiFilter<I>
 where
@@ -10,6 +9,11 @@ where
 {
     iter: I,
     peeks: VecDeque<Option<I::Item>>,
+}
+
+#[inline]
+fn is_terminator(byte: u8) -> bool {
+    byte >= 0x40 && byte <= 0x7e
 }
 
 impl<I> Iterator for CsiFilter<I>
@@ -50,9 +54,9 @@ where
                     return self.peeks.pop_front().unwrap();
                 }
                 // Consume the rest of the ANSI escape sequence up to and
-                // including the terminator 'm'.
+                // including the terminator byte.
                 while let Some(b) = self.iter.next() {
-                    if b == TERMINATOR as u8 {
+                    if is_terminator(b) {
                         break;
                     }
                 }
