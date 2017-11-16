@@ -8,8 +8,8 @@ readme = "README.md"
 license = "MIT"
 
 [badges]
-travis-ci = { repository = "nossralf/kvicksilver" }
-appveyor = { repository = "nossralf/kvicksilver" }
+travis-ci = { repository = "nossralf/kolumn" }
+appveyor = { repository = "nossralf/kolumn" }
 maintenance = { status = "experimental" }
 
 [dependencies]
